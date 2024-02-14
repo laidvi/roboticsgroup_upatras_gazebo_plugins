@@ -61,17 +61,10 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf) {
     return;
   }
 
-  // Check that ROS has been initialized
-  // if (!ros::isInitialized()) {
-  //     RCLCPP_ERROR(node->get_logger(), "A ROS node for Gazebo has not been
-  //     initialized, unable to load plugin."); return;
-  // }
-
   // Check for robot namespace
   if (_sdf->HasElement("robotNamespace")) {
     robot_namespace_ = _sdf->GetElement("robotNamespace")->Get<std::string>();
   }
-  // ros::NodeHandle model_nh(robot_namespace_);
 
   // Check for joint element
   if (!_sdf->HasElement("joint")) {
@@ -175,17 +168,13 @@ void MimicJointPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf) {
 void MimicJointPlugin::UpdateChild() {
 #if GAZEBO_MAJOR_VERSION >= 8
   static rclcpp::Duration period((int)world_->Physics()->GetMaxStepSize(), 0);
-//   static ros::Duration period(world_->Physics()->GetMaxStepSize());
 #else
-  static ros::Duration period(world_->GetPhysicsEngine()->GetMaxStepSize());
+  static rclcpp::Duration period((int)world_->GetPhysicsEngine()->GetMaxStepSize(), 0);
 #endif
 
   // Set mimic joint's angle based on joint's angle
 #if GAZEBO_MAJOR_VERSION >= 8
   double angle = joint_->Position(0) * multiplier_ + offset_;
-
-  // RCLCPP_INFO_STREAM(rclcpp::get_logger("mimic_joint_plugin"), "\033[1;32mAngle: " << angle << "\033[1;0m");
-
   double a = mimic_joint_->Position(0);
 #else
   double angle = joint_->GetAngle(0).Radian() * multiplier_ + offset_;

@@ -43,7 +43,6 @@ namespace gazebo {
         // Check for link element
         if (!_sdf->HasElement("link")) {
             RCLCPP_ERROR(node->get_logger(), "No link element present. DisableLinkPlugin could not be loaded.");
-            // ROS_ERROR("No link element present. DisableLinkPlugin could not be loaded.");
             return;
         }
 
@@ -55,11 +54,9 @@ namespace gazebo {
             link_->SetEnabled(false);
             // Output some confirmation
             RCLCPP_INFO(node->get_logger(), "DisableLinkPlugin loaded! Link: %s", link_name_.c_str());
-            // ROS_INFO_STREAM("DisableLinkPlugin loaded! Link: " << link_name_);
         }
         else
             RCLCPP_ERROR(node->get_logger(), "Link %s not found! DisableLinkPlugin could not be loaded.", link_name_.c_str());
-            // ROS_ERROR_STREAM("Link " << link_name_ << " not found! DisableLinkPlugin could not be loaded.");
     }
 
     GZ_REGISTER_MODEL_PLUGIN(DisableLinkPlugin);
